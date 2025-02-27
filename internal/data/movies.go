@@ -1,6 +1,7 @@
 package data
 
 import (
+	"database/sql"
 	"time"
 
 	"github.com/cerecero/greenlight/internal/validator"
@@ -33,3 +34,19 @@ func ValidateMovie(v *validator.Validator, movie *Movie) {
 	v.Check(validator.Unique(movie.Genres), "genres", "must not contain duplicate values")
 }
 
+type MovieModel struct {
+	DB *sql.DB
+}
+
+func (m MovieModel) Insert(movie *Movie) error {
+	return nil
+}
+func (m MovieModel) Get(id int64) error {
+	return nil
+}
+func (m MovieModel) Update(movie *Movie) error {
+	return nil
+}
+func (m MovieModel) Delete(id int64) error {
+	return nil
+}
