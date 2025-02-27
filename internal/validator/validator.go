@@ -40,7 +40,7 @@ func In(value string, list ...string) bool {
 }
 
 func Matches(value string, rx *regexp.Regexp) bool {
-	return rx.Match(value)
+	return rx.MatchString(value)
 }
 
 func Unique(values []string) bool {
