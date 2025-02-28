@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/cerecero/greenlight/internal/data"
 	"github.com/cerecero/greenlight/internal/validator"
