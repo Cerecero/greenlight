@@ -49,7 +49,7 @@ func main() {
 
 	flag.IntVar(&cfg.db.maxOpenConns, "db-max-open-conns", 25, "PostgresSQL max open connection")
 	flag.IntVar(&cfg.db.maxIdleConns, "db-max-idle-conns", 25, "PostgresSQL max idle connection")
-	flag.StringVar(&cfg.db.maxIdleTime, "db-max-idle-time", "15mins", "PostgresSQL max connection idle time")
+	flag.StringVar(&cfg.db.maxIdleTime, "db-max-idle-time", "15m", "PostgresSQL max connection idle time")
 
 	flag.Parse()
 
@@ -57,7 +57,7 @@ func main() {
 
 	db, err := openDB(cfg)
 	if err != nil {
-		logger.Fatal()
+		logger.Fatal(err)
 	}
 
 	defer db.Close()
