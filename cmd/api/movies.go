@@ -73,7 +73,7 @@ func (app *application) showMovieHandler(w http.ResponseWriter, r *http.Request)
 		app.serverErrorResponse(w, r, err)
 	}
 }
-func (app *application) upadteMovieHandler(w http.ResponseWriter, r *http.Request) {
+func (app *application) updateMovieHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := app.readIDParam(r)
 	if err != nil {
 		app.notFoundResponse(w, r)
@@ -105,7 +105,7 @@ func (app *application) upadteMovieHandler(w http.ResponseWriter, r *http.Reques
 	movie.Title = input.Title
 	movie.Year = input.Year
 	movie.Runtime = input.Runtime
-		movie.Genres = input.Genres
+	movie.Genres = input.Genres
 
 	v := validator.New()
 
@@ -120,7 +120,7 @@ func (app *application) upadteMovieHandler(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	err = app.writeJSON(w, http.StatusOK, envelope{"movie":movie}, nil)
+	err = app.writeJSON(w, http.StatusOK, envelope{"movie": movie}, nil)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 	}
