@@ -166,9 +166,7 @@ func (app *application) listMoviesHandler(w http.ResponseWriter, r *http.Request
 	var input struct {
 		Title    string
 		Genres   []string
-		Page     int
-		PageSize int
-		Sort     string
+		data.Filters
 	}
 
 	v := validator.New()
@@ -178,10 +176,10 @@ func (app *application) listMoviesHandler(w http.ResponseWriter, r *http.Request
 	input.Title = app.readStrings(qs, "title", "")
 	input.Genres = app.readCSV(qs, "genres", []string{})
 
-	input.Page = app.readInt(qs, "pages", 1, v)
-	input.PageSize = app.readInt(qs, "page_size", 20, v)
+	input.Filters.Page = app.readInt(qs, "pages", 1, v)
+	input.Filters.PageSize = app.readInt(qs, "page_size", 20, v)
 
-	input.Sort = app.readStrings(qs, "sort", "id")
+	input.Filters.Sort = app.readStrings(qs, "sort", "id")
 
 	if !v.Valid() {
 		app.failedValidationResponse(w, r, v.Errors)
