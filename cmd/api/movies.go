@@ -93,7 +93,7 @@ func (app *application) updateMovieHandler(w http.ResponseWriter, r *http.Reques
 		Title   *string       `json:"title"`
 		Year    *int32        `json:"year"`
 		Runtime *data.Runtime `json:"runtime"`
-		Genres  []string     `json:"genres"`
+		Genres  []string      `json:"genres"`
 	}
 
 	err = app.readJSON(w, r, &input)
@@ -146,7 +146,7 @@ func (app *application) deleteMovieHandler(w http.ResponseWriter, r *http.Reques
 	}
 
 	err = app.models.Movies.Delete(id)
-	
+
 	if err != nil {
 		switch {
 		case errors.Is(err, data.ErrRecordNotFound):
@@ -160,4 +160,33 @@ func (app *application) deleteMovieHandler(w http.ResponseWriter, r *http.Reques
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 	}
+}
+
+func (app *application) listMoviesHandler(w http.ResponseWriter, r *http.Request) {
+	var input struct {
+		Title    string
+		Genres   []string
+		Page     int
+		PageSize int
+		Sort     string
+	}
+
+	v := validator.New()
+
+	qs := r.URL.Query()
+
+	input.Title = app.readStrings(qs, "title", "")
+	input.Genres = app.readCSV(qs, "genres", []string{})
+
+	input.Page = app.readInt(qs, "pages", 1, v)
+	input.PageSize = app.readInt(qs, "page_size", 20, v)
+
+	input.Sort = app.readStrings(qs, "sort", "id")
+
+	if !v.Valid() {
+		app.failedValidationResponse(w, r, v.Errors)
+		return
+	}
+
+	fmt.Fprintf(w, "%+v\n", input)
 }
