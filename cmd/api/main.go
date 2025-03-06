@@ -9,6 +9,7 @@ import (
 
 	"github.com/cerecero/greenlight/internal/data"
 	"github.com/cerecero/greenlight/internal/jsonlog"
+	"github.com/cerecero/greenlight/internal/mailer"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
@@ -29,12 +30,20 @@ type config struct {
 		burst   int
 		enabled bool
 	}
+	smtp struct {
+		host     string
+		port     int
+		username string
+		password string
+		sender   string
+	}
 }
 
 type application struct {
 	config config
 	logger *jsonlog.Logger
 	models data.Models
+	mailer mailer.Mailer
 }
 
 func main() {
@@ -44,6 +53,8 @@ func main() {
 	}
 
 	dbURL := os.Getenv("DB_URL")
+	smtpName := os.Getenv("SMTP_NAME")
+	smtpPass := os.Getenv("SMTP_PASSWORD")
 	var cfg config
 
 	flag.IntVar(&cfg.port, "port", 4000, "API server port")
@@ -57,6 +68,12 @@ func main() {
 	flag.Float64Var(&cfg.limiter.rps, "limiter-rps", 2, "Rate limiter maximum request per second")
 	flag.IntVar(&cfg.limiter.burst, "limiter-burst", 2, "Rate limiter maximum burst")
 	flag.BoolVar(&cfg.limiter.enabled, "limiter-enabled", true, "Enable rate limiter")
+
+	flag.StringVar(&cfg.smtp.host, "smtp-host", "sandbox.smtp.mailtrap.io", "SMTP host")
+	flag.IntVar(&cfg.smtp.port, "smtp-port", 2525, "SMTP port")
+	flag.StringVar(&cfg.smtp.username, "smtp-username", smtpName, "SMTP username")
+	flag.StringVar(&cfg.smtp.password, "smtp-password", smtpPass, "SMTP password")
+	flag.StringVar(&cfg.smtp.sender, "smtp-sender", "Greenlight <no-reply@greenligh.cerecero.com>", "SMTP sneder")
 
 	flag.Parse()
 
@@ -75,6 +92,7 @@ func main() {
 		config: cfg,
 		logger: logger,
 		models: data.NewModels(db),
+		mailer: mailer.New(cfg.smtp.host,cfg.smtp.port,cfg.smtp.username,cfg.smtp.password,cfg.smtp.sender,),
 	}
 	err = app.server()
 	if err != nil {
