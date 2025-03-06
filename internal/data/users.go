@@ -86,7 +86,7 @@ type UserModel struct {
 	DB *sql.DB
 }
 
-func (m UserModel) Inser(user *User) error {
+func (m UserModel) Insert(user *User) error {
 	query := `
 		 INSERT INTO users (name, email, password_hash, activated) 
 		 VALUES ($1, $2, $3, $4)
