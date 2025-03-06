@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"go/constant"
 	"time"
 
 	"github.com/cerecero/greenlight/internal/validator"
