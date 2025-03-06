@@ -19,7 +19,7 @@ type Mailer struct {
 
 func New(host string, port int, username, password, sender string) Mailer {
 	dialer := mail.NewDialer(host, port, username, password)
-	dialer.Timeout = 5 *time.Second
+	dialer.Timeout = 5 * time.Second
 
 	return Mailer{
 		dialer: dialer,
@@ -27,7 +27,7 @@ func New(host string, port int, username, password, sender string) Mailer {
 	}
 }
 
-func (m Mailer) Send(recipient, templateFile string, data interface{})  error {
+func (m Mailer) Send(recipient, templateFile string, data interface{}) error {
 	tmpl, err := template.New("email").ParseFS(templateFS, "templates/"+templateFile)
 	if err != nil {
 		return err
@@ -58,10 +58,13 @@ func (m Mailer) Send(recipient, templateFile string, data interface{})  error {
 	msg.SetBody("text/plain", plainBody.String())
 	msg.AddAlternative("text/html", htmlBody.String())
 
-	err = m.dialer.DialAndSend(msg)
-	if err != nil {
-		return err
-	}
+	for i := 1; i <= 3; i++ {
+		err = m.dialer.DialAndSend(msg)
+		if nil == err {
+			return nil
+		}
 
-	return nil
+		time.Sleep(500 * time.Millisecond)
+	}
+	return err
 }

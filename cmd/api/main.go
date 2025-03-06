@@ -55,6 +55,7 @@ func main() {
 	dbURL := os.Getenv("DB_URL")
 	smtpName := os.Getenv("SMTP_NAME")
 	smtpPass := os.Getenv("SMTP_PASSWORD")
+
 	var cfg config
 
 	flag.IntVar(&cfg.port, "port", 4000, "API server port")
