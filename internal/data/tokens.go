@@ -13,14 +13,15 @@ import (
 
 const (
 	ScopeActivation = "activation"
+	ScopeAuthentication = "authentication"
 )
 
 type Token struct {
-	Plaintext string
-	Hash      []byte
-	UserID    int64
-	Expiry    time.Time
-	Scope     string
+	Plaintext string    `json:"token"`
+	Hash      []byte    `json:"-"`
+	UserID    int64     `json:"-"`
+	Expiry    time.Time `json:"expiry"`
+	Scope     string    `json:"-"`
 }
 
 func generateToken(userID int64, ttl time.Duration, scope string) (*Token, error) {
@@ -79,7 +80,7 @@ func (m TokenModel) Insert(token *Token) error {
 }
 
 func (m TokenModel) DeleteAllForUser(scope string, userID int64) error {
-	query :=  `
+	query := `
         DELETE FROM tokens 
         WHERE scope = $1 AND user_id = $2`
 
