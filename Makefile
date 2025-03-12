@@ -1,3 +1,6 @@
+confirm:
+	@echo -n 'Are you sure? [y/N] ' && read ans && [ $${ans:-N} = y ]
+
 run/api:
 	go run ./cmd/api
 
@@ -8,6 +11,6 @@ db/migration/new:
 	@echo 'Creating migration files for ${name}...'
 	migrate create -seq -ext=.sql -dir=./migrations ${name}
 
-db/migrations/up:
+db/migrations/up: confirm
 	@echo 'Running migrations...'
 	sudo migrate -path ./migrations -database ${DB_URL} up
