@@ -158,7 +158,7 @@ func (app *application) requireActivatedUser(next http.HandlerFunc) http.Handler
 func (app *application) requirePermission(code string, next http.HandlerFunc) http.HandlerFunc {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		user := app.contextGetUser(r)
-		
+
 		permissions, err := app.models.Permissions.GetAllForUser(user.ID)
 		if err != nil {
 			app.serverErrorResponse(w, r, err)
@@ -175,7 +175,6 @@ func (app *application) requirePermission(code string, next http.HandlerFunc) ht
 	return app.requireActivatedUser(fn)
 }
 
-
 func (app *application) enableCORS(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Vary", "Origin")
@@ -185,18 +184,18 @@ func (app *application) enableCORS(next http.Handler) http.Handler {
 		origin := r.Header.Get("Origin")
 
 		if origin != "" {
-			for i:= range app.config.cors.trustedOrigins {
+			for i := range app.config.cors.trustedOrigins {
 				if origin == app.config.cors.trustedOrigins[i] {
-				w.Header().Set("Access-Control-Allow-Origin", "*")
+					w.Header().Set("Access-Control-Allow-Origin", "*")
 
-				if r.Method == http.MethodOptions && r.Header.Get("Access-Control-Request-Method") != "" {
-						 w.Header().Set("Access-Control-Allow-Methods", "OPTIONS, PUT, PATCH, DELETE")
-                        w.Header().Set("Access-Control-Allow-Headers", "Authorization, Content-Type")
+					if r.Method == http.MethodOptions && r.Header.Get("Access-Control-Request-Method") != "" {
+						w.Header().Set("Access-Control-Allow-Methods", "OPTIONS, PUT, PATCH, DELETE")
+						w.Header().Set("Access-Control-Allow-Headers", "Authorization, Content-Type")
 
 						w.WriteHeader(http.StatusOK)
 						return
 					}
-				break
+					break
 				}
 			}
 		}
@@ -213,13 +212,13 @@ func (app *application) metrics(next http.Handler) http.Handler {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		totaleRequestsReceived.Add(1)
-		
+
 		metrics := httpsnoop.CaptureMetrics(next, w, r)
 
 		totalResponsesSent.Add(1)
 
 		totalProcessingTimeMicroseconds.Add(metrics.Duration.Microseconds())
-		
+
 		totalResponsesSentByStatus.Add(strconv.Itoa(metrics.Code), 1)
 	})
 }

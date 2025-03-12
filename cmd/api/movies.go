@@ -164,8 +164,8 @@ func (app *application) deleteMovieHandler(w http.ResponseWriter, r *http.Reques
 
 func (app *application) listMoviesHandler(w http.ResponseWriter, r *http.Request) {
 	var input struct {
-		Title    string
-		Genres   []string
+		Title  string
+		Genres []string
 		data.Filters
 	}
 
@@ -192,8 +192,8 @@ func (app *application) listMoviesHandler(w http.ResponseWriter, r *http.Request
 		app.serverErrorResponse(w, r, err)
 		return
 	}
-	
-	err = app.writeJSON(w, http.StatusOK, envelope{"movie":movies, "metadata":metadata}, nil)
+
+	err = app.writeJSON(w, http.StatusOK, envelope{"movie": movies, "metadata": metadata}, nil)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 	}

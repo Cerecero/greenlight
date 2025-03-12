@@ -68,7 +68,7 @@ func (app *application) registerUserHandler(w http.ResponseWriter, r *http.Reque
 	app.background(func() {
 		data := map[string]interface{}{
 			"activationToken": token.Plaintext,
-			"userID": user.ID,
+			"userID":          user.ID,
 		}
 
 		err = app.mailer.Send(user.Email, "user_welcome.tmpl", data)
@@ -84,7 +84,6 @@ func (app *application) registerUserHandler(w http.ResponseWriter, r *http.Reque
 
 }
 
-
 func (app *application) activateUserHandler(w http.ResponseWriter, r *http.Request) {
 	var input struct {
 		TokenPlaintext string `json:"token"`
@@ -98,7 +97,7 @@ func (app *application) activateUserHandler(w http.ResponseWriter, r *http.Reque
 
 	v := validator.New()
 
-	if data.ValidateTokenPlaintext(v, input.TokenPlaintext); !v.Valid(){
+	if data.ValidateTokenPlaintext(v, input.TokenPlaintext); !v.Valid() {
 		app.failedValidationResponse(w, r, v.Errors)
 		return
 	}

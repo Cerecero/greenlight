@@ -42,7 +42,7 @@ func (app *application) serve() error {
 			shutdownError <- err
 		}
 
-		app.logger.PrintInfo("completing background tasks", map[string]string {
+		app.logger.PrintInfo("completing background tasks", map[string]string{
 			"addr": srv.Addr,
 		})
 

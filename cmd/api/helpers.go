@@ -46,14 +46,15 @@ func (app *application) writeJSON(w http.ResponseWriter, status int, data envelo
 
 	return nil
 }
-																		//destination
+
+// destination
 func (app *application) readJSON(w http.ResponseWriter, r *http.Request, dst interface{}) error {
 	maxBytes := 1_048_576
 	r.Body = http.MaxBytesReader(w, r.Body, int64(maxBytes))
 
 	dec := json.NewDecoder(r.Body)
 	dec.DisallowUnknownFields()
-	err := dec.Decode(dst) 
+	err := dec.Decode(dst)
 	if err != nil {
 		var syntaxError *json.SyntaxError
 		var unmarshalTypeError *json.UnmarshalTypeError
@@ -78,7 +79,7 @@ func (app *application) readJSON(w http.ResponseWriter, r *http.Request, dst int
 		case strings.HasPrefix(err.Error(), "json: unknown field "):
 			fieldName := strings.TrimPrefix(err.Error(), "json: unknown field ")
 			return fmt.Errorf("body contains unknown key %s", fieldName)
-		
+
 		case err.Error() == "http: request body too large":
 			return fmt.Errorf("body must not be larger than %d bytes", maxBytes)
 
@@ -116,7 +117,7 @@ func (app *application) readCSV(qs url.Values, key string, defaultValue []string
 	return strings.Split(csv, ",")
 }
 
-func (app *application) readInt(qs url.Values, key string, defaultValue int, v *validator.Validator) int{
+func (app *application) readInt(qs url.Values, key string, defaultValue int, v *validator.Validator) int {
 	s := qs.Get(key)
 
 	if s == "" {
@@ -140,7 +141,7 @@ func (app *application) background(fn func()) {
 
 		defer func() {
 			if err := recover(); err != nil {
-				app.logger.PrintError(fmt.Errorf("%s", err),nil)
+				app.logger.PrintError(fmt.Errorf("%s", err), nil)
 			}
 		}()
 		fn()

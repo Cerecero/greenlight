@@ -10,6 +10,7 @@ import (
 	"github.com/cerecero/greenlight/internal/validator"
 	"golang.org/x/crypto/bcrypt"
 )
+
 var AnonymousUser = &User{}
 
 type User struct {
@@ -171,7 +172,7 @@ func (m UserModel) Update(user *User) error {
 	return nil
 }
 
-func (m UserModel) GetForToken(tokenScope, tokenPlaintext string) (*User ,error) {
+func (m UserModel) GetForToken(tokenScope, tokenPlaintext string) (*User, error) {
 	tokenHash := sha256.Sum256([]byte(tokenPlaintext))
 
 	query := `
@@ -186,18 +187,18 @@ func (m UserModel) GetForToken(tokenScope, tokenPlaintext string) (*User ,error)
 	args := []interface{}{tokenHash[:], tokenScope, time.Now()}
 
 	var user User
-	
+
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
 	err := m.DB.QueryRowContext(ctx, query, args...).Scan(
 		&user.ID,
-        &user.CreatedAt,
-        &user.Name,
-        &user.Email,
-        &user.Password.hash,
-        &user.Activated,
-        &user.Version,
+		&user.CreatedAt,
+		&user.Name,
+		&user.Email,
+		&user.Password.hash,
+		&user.Activated,
+		&user.Version,
 	)
 	if err != nil {
 		switch {

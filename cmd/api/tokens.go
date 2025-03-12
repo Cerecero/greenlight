@@ -41,7 +41,6 @@ func (app *application) createAuthenticationTokenHandler(w http.ResponseWriter, 
 		}
 	}
 
-
 	match, err := user.Password.Matches(input.Password)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
@@ -52,7 +51,7 @@ func (app *application) createAuthenticationTokenHandler(w http.ResponseWriter, 
 		app.invalidCredentialsResponse(w, r)
 		return
 	}
-	
+
 	token, err := app.models.Tokens.New(user.ID, 24*time.Hour, data.ScopeAuthentication)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)

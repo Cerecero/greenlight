@@ -16,8 +16,8 @@ type Movie struct {
 	CreatedAt time.Time `json:"-"` //- to ommit in the json response
 	Title     string    `json:"title"`
 	Year      int32     `json:"year,omitempty"` // omitempty directive, use json:",omitempty" if you want to keep the key name but omit if empty
-	Runtime   Runtime   `json:"runtime,omitempty""`
-	Genres    []string  `json:"genres,omitempty""`
+	Runtime   Runtime   `json:"runtime,omitempty"`
+	Genres    []string  `json:"genres,omitempty"`
 	Version   int32     `json:"version"`
 }
 
@@ -104,7 +104,7 @@ func (m MovieModel) GetAll(title string, genres []string, filters Filters) ([]*M
 
 	rows, err := m.DB.QueryContext(ctx, query, args...)
 	if err != nil {
-		return nil,  Metadata{}, err
+		return nil, Metadata{}, err
 	}
 
 	defer rows.Close()
@@ -126,19 +126,19 @@ func (m MovieModel) GetAll(title string, genres []string, filters Filters) ([]*M
 		)
 
 		if err != nil {
-			return nil, Metadata{},err
+			return nil, Metadata{}, err
 		}
 
 		movies = append(movies, &movie)
 	}
 
 	if err = rows.Err(); err != nil {
-		return nil, Metadata{},err
+		return nil, Metadata{}, err
 	}
 
 	metadata := calculateMetadata(totalRecords, filters.Page, filters.PageSize)
 
-	return movies, metadata,nil
+	return movies, metadata, nil
 }
 
 func (m MovieModel) Update(movie *Movie) error {
