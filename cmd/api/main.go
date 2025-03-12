@@ -60,7 +60,6 @@ func main() {
 		panic(err)
 	}
 
-	dbURL := os.Getenv("DB_URL")
 	smtpName := os.Getenv("SMTP_NAME")
 	smtpPass := os.Getenv("SMTP_PASSWORD")
 
@@ -68,7 +67,7 @@ func main() {
 
 	flag.IntVar(&cfg.port, "port", 4000, "API server port")
 	flag.StringVar(&cfg.env, "env", "development", "Environment (development|staging|production)")
-	flag.StringVar(&cfg.db.dsn, "db-dsn", dbURL, "PostgresSQL DSN")
+	flag.StringVar(&cfg.db.dsn, "db-dsn", "", "PostgresSQL DSN")
 
 	flag.IntVar(&cfg.db.maxOpenConns, "db-max-open-conns", 25, "PostgresSQL max open connection")
 	flag.IntVar(&cfg.db.maxIdleConns, "db-max-idle-conns", 25, "PostgresSQL max idle connection")
