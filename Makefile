@@ -1,3 +1,6 @@
+# Include variables from the .env file
+include .env
+
 ## help: print this help message
 .PHONY: help
 help:
@@ -11,12 +14,12 @@ confirm:
 ## run/api: run the cmd/api application
 .PHONY: run/api
 run/api:
-	go run ./cmd/api -db-dsn=${DB_URL}
+	@go run ./cmd/api -db-dsn=${DB_URL}
 
 ## db/psql: connect to the database using psql
 .PHONY: db/psql
 db/psql:
-	psql ${DB_URL}
+	@psql ${DB_URL}
 
 ## db/migration/new name=$1: create a new database migration
 .PHONY: db/migration/new
